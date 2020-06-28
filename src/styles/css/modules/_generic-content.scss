@@ -1,0 +1,19 @@
+.generic-content {
+  h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    
+    &:not(:first-child) {
+      margin-top: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1.6rem;
+
+    &:not(:last-child) {
+      margin-bottom: 3rem;
+    }
+  }
+}
