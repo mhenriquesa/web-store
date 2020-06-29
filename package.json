@@ -7,7 +7,8 @@
   "scripts": {
     "start": "start webpack-dev-server --config webpack/webpack.dev.js --open",
     "build": "start webpack  --config webpack/webpack.prod.js",
-    "watch": "start nodemon ./src/app.js --ignore public/ && start webpack --config webpack/webpack.dev.js --watch"
+    "watch": "start nodemon ./src/app.js --ignore public/ --ignore node_modules/ && start webpack --config webpack/webpack.dev.js --watch",
+    "nodemon": "start nodemon ./src/app.js --ignore public/ --ignore node_modules/"
   },
   "keywords": [],
   "author": "M Henrique SA",
@@ -31,5 +32,9 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
   }
 }
