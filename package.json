@@ -7,7 +7,7 @@
   "scripts": {
     "start": "start webpack-dev-server --config webpack/webpack.dev.js --open",
     "build": "start webpack  --config webpack/webpack.prod.js",
-    "watch": "start nodemon ./src/app.js --ignore public/ --ignore node_modules/ && start webpack --config webpack/webpack.dev.js --watch",
+    "watch": "start nodemon ./src/app.js --ignore public/ --ignore node_modules/ --ignore scripts/ && start webpack --config webpack/webpack.config.js --watch",
     "nodemon": "start nodemon ./src/app.js --ignore public/ --ignore node_modules/"
   },
   "keywords": [],
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "ejs": "^3.1.3",
     "express": "^4.17.1"
   }
 }
