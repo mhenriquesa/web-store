@@ -7,6 +7,8 @@ exports.addProductScreen = (req, res, next) => {
 };
 
 exports.addProduct = (req, res, next) => {
-  Products.addProduct({ title: req.body.title });
+  const newProduct = new Products(req.body.title, req.body.price);
+  newProduct.save();
+
   res.redirect('/');
 };

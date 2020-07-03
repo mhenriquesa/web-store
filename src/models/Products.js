@@ -1,15 +1,19 @@
+const products = [];
+
 class Products {
-  constructor(name, price, description) {
-    this.name = name;
+  constructor(name, price, description, image) {
+    this.title = name;
     this.price = price;
-    this.description = description;
+    // this.description = description;
+    // this.image = image;
+  }
+  save() {
+    products.push(this);
+  }
+
+  static list() {
+    return products;
   }
 }
-
-Products.list = [];
-
-Products.addProduct = function (anProduct) {
-  Products.list.push(anProduct);
-};
 
 module.exports = Products;
