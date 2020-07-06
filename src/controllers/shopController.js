@@ -1,9 +1,11 @@
 const Products = require('../models/Products');
 
 exports.home = (req, res, next) => {
-  res.render('shop', {
-    pageTitle: 'Gypsy Store',
-    products: Products.list(),
+  Products.list(products => {
+    res.render('shop', {
+      pageTitle: 'Gypsy Store',
+      products: products,
+    });
   });
 };
 
