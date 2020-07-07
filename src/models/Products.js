@@ -15,15 +15,16 @@ class Products {
     // this.image = image;
   }
 
-  save() {
-    fs.readFile(productsDataPath, (err, fileContent) => {
-      let products = err ? [] : JSON.parse(fileContent);
-      products.push(this);
+  insertNewProduct(products) {
+    products.push(this);
 
-      fs.writeFile(productsDataPath, JSON.stringify(products), err => {
-        if (err) console.log(err);
-      });
+    fs.writeFile(productsDataPath, JSON.stringify(products), err => {
+      if (err) console.log(err);
     });
+  }
+
+  save() {
+    Products.list(products => this.insertNewProduct(products));
   }
 
   static list(callback) {

@@ -1,7 +1,7 @@
 const Products = require('../models/Products');
 
 exports.addProductScreen = (req, res, next) => {
-  res.render('add-product', {
+  res.render('admin/add-product', {
     pageTitle: 'Gypsy Store - Add a product',
   });
 };
