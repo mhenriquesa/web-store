@@ -11,8 +11,8 @@ class Products {
   constructor(name, price, description, image) {
     this.title = name;
     this.price = price;
-    // this.description = description;
-    // this.image = image;
+    this.description = description;
+    this.image = image;
   }
 
   insertNewProduct(products) {
