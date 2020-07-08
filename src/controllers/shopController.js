@@ -10,6 +10,18 @@ exports.home = (req, res, next) => {
   });
 };
 
+exports.productScreen = (req, res, next) => {
+  Products.findProductById(req.params.productId, product => {
+    console.log(product);
+
+    res.render('product-detail', {
+      pageTitle: `Gypsy store - ${product.title}`,
+      path: '/product-detail',
+      product: product,
+    });
+  });
+};
+
 exports.getProducts = (req, res, next) => {
   Products.list(products => {
     res.render('products-list', {
@@ -47,6 +59,6 @@ exports.getCheckout = (req, res, next) => {
 exports.pageNotFound = (req, res) => {
   res.status(404).render('404', {
     pageTitle: 'Gypsy Store - Page Not Found',
-    path: '*',
+    path: '/404',
   });
 };
