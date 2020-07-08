@@ -26,6 +26,11 @@ exports.editProductScreen = (req, res, next) => {
   });
 };
 
+exports.deleteProduct = (req, res, next) => {
+  Products.delete(req.body.productId);
+  res.redirect('/admin/products');
+};
+
 exports.allProducts = (req, res, next) => {
   Products.list(products => {
     res.render('admin/products', {

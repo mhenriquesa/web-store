@@ -40,6 +40,19 @@ class Products {
     });
   }
 
+  static delete(productId) {
+    Products.list(products => {
+      const productIndex = products.findIndex(item => item.id === productId);
+      const currentProducts = [...products];
+
+      currentProducts.splice(productIndex, 1);
+
+      fs.writeFile(productsDataPath, JSON.stringify(currentProducts), err => {
+        if (err) console.log(err);
+      });
+    });
+  }
+
   static list(callback) {
     fs.readFile(productsDataPath, (err, fileContent) => {
       if (err) {
