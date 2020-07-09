@@ -33,10 +33,6 @@ exports.getProducts = (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
   let cart = await Cart.currentCart();
-  let allProducts = await Products.getList();
-
-  console.log(`cart `, cart);
-  console.log(`products `, allProducts);
 
   res.render('cart', {
     pageTitle: 'Gypsy Store - Your cart',
@@ -48,7 +44,12 @@ exports.getCart = async (req, res, next) => {
 
 exports.addToCart = (req, res, next) => {
   Cart.addToCart(req.body.productId);
-  res.redirect('/');
+  res.redirect('/cart');
+};
+
+exports.deleteFromCart = (req, res, next) => {
+  Cart.deleteItem(req.body.productId);
+  res.redirect('/cart');
 };
 
 exports.getOrders = (req, res, next) => {

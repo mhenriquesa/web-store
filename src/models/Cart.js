@@ -24,16 +24,34 @@ class Cart {
 
   static update(cart) {
     fs.writeFile(cartDataPath, JSON.stringify(cart), err => {
-      console.log(err);
+      if (err) throw err;
     });
+  }
+
+  static async deleteItem(productId) {
+    const currentCart = await Cart.currentCart();
+
+    const productToDelete = currentCart.products.filter(item => {
+      return item.id === productId;
+    });
+
+    const updatedProducts = currentCart.products.filter(item => {
+      return item.id !== productId;
+    });
+
+    const newCart = {
+      products: updatedProducts,
+      totalPrice:
+        currentCart.totalPrice - productToDelete[0].price * productToDelete[0].qty,
+    };
+
+    Cart.update(newCart);
   }
 
   static async addToCart(productId) {
     const cart = await Cart.currentCart();
     let product = await Products.getProductById(productId);
     let productInCart = cart.products.filter(item => item.id === productId);
-
-    console.log(product);
 
     if (productInCart.length) {
       cart.products.map(item => {
@@ -44,8 +62,6 @@ class Cart {
     } else cart.products.push(Object.assign({}, product, { qty: 1 }));
 
     cart.totalPrice += +product.price;
-
-    console.log(cart);
 
     Cart.update(cart);
   }

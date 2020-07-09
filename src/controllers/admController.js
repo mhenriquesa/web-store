@@ -63,7 +63,6 @@ exports.editProduct = (req, res, next) => {
     req.body.imageUrl,
     req.body.productId
   );
-  console.log(newProduct);
 
   newProduct.save();
   res.redirect('/');
