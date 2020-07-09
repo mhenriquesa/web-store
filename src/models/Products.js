@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { call } = require('file-loader');
 
 const productsDataPath = path.join(
   path.dirname(process.mainModule.filename),
@@ -63,10 +62,32 @@ class Products {
     });
   }
 
+  static getList() {
+    return new Promise((resolve, reject) => {
+      fs.readFile(productsDataPath, (err, fileContent) => {
+        if (err) {
+          console.log(err);
+          return reject([]);
+        }
+        resolve(JSON.parse(fileContent));
+      });
+    });
+  }
+
   static findProductById(id, callback) {
     Products.list(products => {
       const product = products.find(item => item.id === id);
       callback(product);
+    });
+  }
+
+  static getProductById(id) {
+    return new Promise((resolve, reject) => {
+      Products.list(products => {
+        const product = products.find(item => item.id === id);
+        if (!product) return reject(`Product not found`);
+        resolve(product);
+      });
     });
   }
 }

@@ -1,4 +1,5 @@
 const Products = require('../models/Products');
+const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
   Products.list(products => {
@@ -12,8 +13,6 @@ exports.home = (req, res, next) => {
 
 exports.productScreen = (req, res, next) => {
   Products.findProductById(req.params.productId, product => {
-    console.log(product);
-
     res.render('product-detail', {
       pageTitle: `Gypsy store - ${product.title}`,
       path: '/product-detail',
@@ -32,12 +31,24 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-exports.getCart = (req, res, next) => {
+exports.getCart = async (req, res, next) => {
+  let cart = await Cart.currentCart();
+  let allProducts = await Products.getList();
+
+  console.log(`cart `, cart);
+  console.log(`products `, allProducts);
+
   res.render('cart', {
     pageTitle: 'Gypsy Store - Your cart',
     pageSubTitle: 'Manage your cart',
     path: '/cart',
+    products: cart.products,
   });
+};
+
+exports.addToCart = (req, res, next) => {
+  Cart.addToCart(req.body.productId);
+  res.redirect('/');
 };
 
 exports.getOrders = (req, res, next) => {

@@ -1,0 +1,29 @@
+{
+  "products": [
+    {
+      "title": "Coxinha",
+      "price": "4",
+      "description": "Melhor coxinha",
+      "image": "https://p2.trrsf.com/image/fget/cf/1200/1200/filters:quality(85)/images.terra.com/2018/09/11/massa-de-coxinha-receita.jpg",
+      "id": "0.15211520910003862",
+      "qty": 2
+    },
+    {
+      "title": "Refrigerante",
+      "price": "7",
+      "description": "Mais Gelado",
+      "image": "https://static.carrefour.com.br/medias/sys_master/images/images/h5c/h2c/h00/h00/12175739191326.jpg",
+      "id": "0.3605010609307029",
+      "qty": 1
+    },
+    {
+      "title": "book",
+      "price": "10",
+      "description": "sdfsfd",
+      "image": "https://i.pinimg.com/736x/05/dd/2c/05dd2cceb604651ac44c7cc41ceb5e7f.jpg",
+      "id": "0.09853862197464847",
+      "qty": 1
+    }
+  ],
+  "totalPrice": 25
+}
