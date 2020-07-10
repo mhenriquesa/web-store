@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const db = require('../util/database');
 
 const productsDataPath = path.join(
   path.dirname(process.mainModule.filename),
@@ -52,14 +53,24 @@ class Products {
     });
   }
 
-  static list(callback) {
-    fs.readFile(productsDataPath, (err, fileContent) => {
-      if (err) {
-        console.log(err);
-        return callback([]);
-      }
-      return callback(JSON.parse(fileContent));
+  static list() {
+    return new Promise((resolve, reject) => {
+      db.execute('SELECT * FROM products')
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
+
+    // fs.readFile(productsDataPath, (err, fileContent) => {
+    //   if (err) {
+    //     console.log(err);
+    //     return callback([]);
+    //   }
+    //   return callback(JSON.parse(fileContent));
+    // });
   }
 
   static getList() {

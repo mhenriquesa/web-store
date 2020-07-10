@@ -2,13 +2,17 @@ const Products = require('../models/Products');
 const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
-  Products.list(products => {
-    res.render('index', {
-      pageTitle: 'Gypsy Store',
-      products: products,
-      path: '/',
+  Products.list()
+    .then(products => {
+      res.render('index', {
+        pageTitle: 'Gypsy Store',
+        products: products[0],
+        path: '/',
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 };
 
 exports.productScreen = (req, res, next) => {
