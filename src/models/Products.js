@@ -17,79 +17,23 @@ class Products {
     this.id = id;
   }
 
-  updateProducts(products, newProduct = false) {
-    if (newProduct) products.push(this);
-
-    fs.writeFile(productsDataPath, JSON.stringify(products), err => {
-      if (err) console.log(err);
-    });
-  }
-
   save() {
-    Products.list()
-      .then(([rows, fieldData]) => {
-        res.render('admin/products', {
-          pageTitle: 'Gypsy Store - Admin products',
-          pageSubTitle: "Manage stores's products",
-          products: rows,
-          path: '/admin/products',
-        });
-      })
-      .catch(err => console.log(err));
+    return db.execute(
+      'INSERT INTO products (title, price, description, image) VALUES (?, ?, ?, ?)',
+      [this.title, this.price, this.image, this.description]
+    );
   }
 
   static delete(productId) {
-    Products.list()
-      .then(([rows, fieldData]) => {
-        const productIndex = rows.findIndex(item => item.id == productId);
-        const currentProducts = [...rows];
-
-        currentProducts.splice(productIndex, 1);
-
-        fs.writeFile(productsDataPath, JSON.stringify(currentProducts), err => {
-          if (err) console.log(err);
-        });
-      })
-      .catch(err => console.log(err));
+    return db.execute('DELETE FROM products WHERE id=?'[productId]);
   }
 
   static list() {
     return db.execute('SELECT * FROM products');
   }
 
-  static getList() {
-    return new Promise((resolve, reject) => {
-      fs.readFile(productsDataPath, (err, fileContent) => {
-        if (err) {
-          console.log(err);
-          return reject([]);
-        }
-        resolve(JSON.parse(fileContent));
-      });
-    });
-  }
-
-  static findProductById(id) {
-    return new Promise((resolve, reject) => {
-      Products.list()
-        .then(([rows, fieldData]) => {
-          const product = rows.find(item => item.id === id);
-          resolve(product);
-        })
-        .catch(err => reject(err));
-    });
-  }
-
   static getProductById(id) {
-    return new Promise((resolve, reject) => {
-      Products.list()
-        .then(([rows, fieldData]) => {
-          const product = rows.find(item => item.id == id);
-          if (!product) return reject(`Product not found`);
-          resolve(product);
-        })
-        .catch(err => console.log(err));
-    });
+    return db.execute('SELECT * FROM products WHERE products.id=?', [id]);
   }
 }
 

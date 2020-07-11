@@ -12,18 +12,19 @@ exports.editProductScreen = (req, res, next) => {
 
   if (!editMode) return res.redirect('/');
 
-  const productId = req.params.productId;
+  Products.getProductById(req.params.productId)
+    .then(product => {
+      console.log(product);
+      if (!product) return res.redirect('/');
 
-  Products.findProductById(productId, product => {
-    if (!product) return res.redirect('/');
-
-    res.render('admin/edit-product', {
-      pageTitle: 'Gypsy Store - Products edition',
-      path: '/admin/edit-product',
-      product: product,
-      editing: editMode,
-    });
-  });
+      res.render('admin/edit-product', {
+        pageTitle: 'Gypsy Store - Products edition',
+        path: '/admin/edit-product',
+        product: product,
+        editing: editMode,
+      });
+    })
+    .catch(err => {});
 };
 
 exports.deleteProduct = (req, res, next) => {
@@ -52,9 +53,10 @@ exports.addProduct = (req, res, next) => {
     req.body.imageUrl,
     null
   );
-  newProduct.save();
-
-  res.redirect('/');
+  newProduct
+    .save()
+    .then(res.redirect('/'))
+    .catch(err => console.log(err));
 };
 
 exports.editProduct = (req, res, next) => {
@@ -66,6 +68,8 @@ exports.editProduct = (req, res, next) => {
     req.body.productId
   );
 
-  newProduct.save();
-  res.redirect('/');
+  newProduct
+    .save()
+    .then(res.redirect('/'))
+    .catch(err => console.log(err));
 };

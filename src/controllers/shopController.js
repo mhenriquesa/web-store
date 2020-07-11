@@ -16,13 +16,13 @@ exports.home = (req, res, next) => {
 };
 
 exports.productScreen = (req, res, next) => {
-  Products.findProductById(parseInt(req.params.productId))
-    .then(product => {
-      console.log(product);
+  Products.getProductById(req.params.productId)
+    .then(([rows]) => {
+      console.log(rows[0]);
       res.render('product-detail', {
-        pageTitle: `Gypsy store - ${product.title}`,
+        pageTitle: `Gypsy store - ${rows[0].title}`,
         path: '/product-detail',
-        product: product,
+        product: rows[0],
       });
     })
     .catch(err => console.log(err));
