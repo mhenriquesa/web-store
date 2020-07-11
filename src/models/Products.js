@@ -26,51 +26,35 @@ class Products {
   }
 
   save() {
-    Products.list(products => {
-      if (this.id) {
-        const productIndex = products.findIndex(item => item.id === this.id);
-        const currentProducts = [...products];
-
-        currentProducts[productIndex] = this;
-        this.updateProducts(currentProducts);
-      } else {
-        this.id = Math.random().toString();
-        this.updateProducts(products, true);
-      }
-    });
+    Products.list()
+      .then(([rows, fieldData]) => {
+        res.render('admin/products', {
+          pageTitle: 'Gypsy Store - Admin products',
+          pageSubTitle: "Manage stores's products",
+          products: rows,
+          path: '/admin/products',
+        });
+      })
+      .catch(err => console.log(err));
   }
 
   static delete(productId) {
-    Products.list(products => {
-      const productIndex = products.findIndex(item => item.id === productId);
-      const currentProducts = [...products];
+    Products.list()
+      .then(([rows, fieldData]) => {
+        const productIndex = rows.findIndex(item => item.id == productId);
+        const currentProducts = [...rows];
 
-      currentProducts.splice(productIndex, 1);
+        currentProducts.splice(productIndex, 1);
 
-      fs.writeFile(productsDataPath, JSON.stringify(currentProducts), err => {
-        if (err) console.log(err);
-      });
-    });
+        fs.writeFile(productsDataPath, JSON.stringify(currentProducts), err => {
+          if (err) console.log(err);
+        });
+      })
+      .catch(err => console.log(err));
   }
 
   static list() {
-    return new Promise((resolve, reject) => {
-      db.execute('SELECT * FROM products')
-        .then(result => {
-          resolve(result);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-
-    // fs.readFile(productsDataPath, (err, fileContent) => {
-    //   if (err) {
-    //     console.log(err);
-    //     return callback([]);
-    //   }
-    //   return callback(JSON.parse(fileContent));
-    // });
+    return db.execute('SELECT * FROM products');
   }
 
   static getList() {
@@ -88,9 +72,8 @@ class Products {
   static findProductById(id) {
     return new Promise((resolve, reject) => {
       Products.list()
-        .then(products => {
-          console.log(products[0]);
-          const product = products[0].find(item => item.id === id);
+        .then(([rows, fieldData]) => {
+          const product = rows.find(item => item.id === id);
           resolve(product);
         })
         .catch(err => reject(err));
@@ -99,11 +82,13 @@ class Products {
 
   static getProductById(id) {
     return new Promise((resolve, reject) => {
-      Products.list(products => {
-        const product = products.find(item => item.id === id);
-        if (!product) return reject(`Product not found`);
-        resolve(product);
-      });
+      Products.list()
+        .then(([rows, fieldData]) => {
+          const product = rows.find(item => item.id == id);
+          if (!product) return reject(`Product not found`);
+          resolve(product);
+        })
+        .catch(err => console.log(err));
     });
   }
 }

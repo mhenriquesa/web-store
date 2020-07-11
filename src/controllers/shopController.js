@@ -3,10 +3,10 @@ const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
   Products.list()
-    .then(products => {
+    .then(([rows, fieldData]) => {
       res.render('index', {
         pageTitle: 'Gypsy Store',
-        products: products[0],
+        products: rows,
         path: '/',
       });
     })
@@ -30,10 +30,10 @@ exports.productScreen = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Products.list()
-    .then(products => {
+    .then(([rows, fieldData]) => {
       res.render('products-list', {
         pageTitle: 'Gypsy Store - All products',
-        products: products[0],
+        products: rows,
         path: '/products',
       });
     })

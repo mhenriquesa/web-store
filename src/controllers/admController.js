@@ -32,14 +32,16 @@ exports.deleteProduct = (req, res, next) => {
 };
 
 exports.allProducts = (req, res, next) => {
-  Products.list(products => {
-    res.render('admin/products', {
-      pageTitle: 'Gypsy Store - Admin products',
-      pageSubTitle: "Manage stores's products",
-      products: products,
-      path: '/admin/products',
-    });
-  });
+  Products.list()
+    .then(([rows, fieldData]) => {
+      res.render('admin/products', {
+        pageTitle: 'Gypsy Store - Admin products',
+        pageSubTitle: "Manage stores's products",
+        products: rows,
+        path: '/admin/products',
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.addProduct = (req, res, next) => {
