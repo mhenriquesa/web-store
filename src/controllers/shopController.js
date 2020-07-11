@@ -16,23 +16,28 @@ exports.home = (req, res, next) => {
 };
 
 exports.productScreen = (req, res, next) => {
-  Products.findProductById(req.params.productId, product => {
-    res.render('product-detail', {
-      pageTitle: `Gypsy store - ${product.title}`,
-      path: '/product-detail',
-      product: product,
-    });
-  });
+  Products.findProductById(parseInt(req.params.productId))
+    .then(product => {
+      console.log(product);
+      res.render('product-detail', {
+        pageTitle: `Gypsy store - ${product.title}`,
+        path: '/product-detail',
+        product: product,
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-  Products.list(products => {
-    res.render('products-list', {
-      pageTitle: 'Gypsy Store - All products',
-      products: products,
-      path: '/products',
-    });
-  });
+  Products.list()
+    .then(products => {
+      res.render('products-list', {
+        pageTitle: 'Gypsy Store - All products',
+        products: products[0],
+        path: '/products',
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getCart = async (req, res, next) => {

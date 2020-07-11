@@ -85,10 +85,15 @@ class Products {
     });
   }
 
-  static findProductById(id, callback) {
-    Products.list(products => {
-      const product = products.find(item => item.id === id);
-      callback(product);
+  static findProductById(id) {
+    return new Promise((resolve, reject) => {
+      Products.list()
+        .then(products => {
+          console.log(products[0]);
+          const product = products[0].find(item => item.id === id);
+          resolve(product);
+        })
+        .catch(err => reject(err));
     });
   }
 
