@@ -2,38 +2,36 @@ const Products = require('../models/Products');
 const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
-  Products.list()
-    .then(([rows, fieldData]) => {
+  Products.findAll()
+    .then(result => {
       res.render('index', {
         pageTitle: 'Gypsy Store',
-        products: rows,
+        products: result,
         path: '/',
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => console.log(err));
 };
 
 exports.productScreen = (req, res, next) => {
-  Products.getProductById(req.params.productId)
-    .then(([rows]) => {
-      console.log(rows[0]);
+  Products.findByPk(req.params.productId)
+    .then(product => {
+      console.log(product);
       res.render('product-detail', {
-        pageTitle: `Gypsy store - ${rows[0].title}`,
+        pageTitle: `Gypsy store - ${product.title}`,
         path: '/product-detail',
-        product: rows[0],
+        product: product,
       });
     })
     .catch(err => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-  Products.list()
-    .then(([rows, fieldData]) => {
+  Products.findAll()
+    .then(result => {
       res.render('products-list', {
         pageTitle: 'Gypsy Store - All products',
-        products: rows,
+        products: result,
         path: '/products',
       });
     })

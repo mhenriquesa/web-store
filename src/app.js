@@ -4,11 +4,11 @@ const bodyParser = require('body-parser');
 const shopRouter = require('./routers/shop.router');
 const adminRouter = require('./routers/admin.router');
 const sequelize = require('./util/database');
-
 const dotenv = require('dotenv');
-dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const publicPath = path.join(__dirname, '../public');
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
