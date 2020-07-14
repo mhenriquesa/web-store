@@ -1,26 +1,30 @@
-const { Sequelize } = require('sequelize');
-const sequelize = require('../util/database');
+const { ObjectID } = require('mongodb');
+const productsCollection = require('../db').db().collection('products');
 
-const Product = sequelize.define('product', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  image: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
+class Products {
+  constructor(data) {
+    this.data = data;
+  }
 
-module.exports = Product;
+  create() {
+    return productsCollection.insertOne(this.data);
+  }
+
+  static listAll() {
+    return productsCollection.find().toArray();
+  }
+
+  static findById(id) {
+    return productsCollection.find({ _id: new ObjectID(id) }).toArray();
+  }
+
+  static deleteById(id) {
+    return productsCollection.deleteOne({ _id: new ObjectID(id) });
+  }
+
+  static updateById(id, updates) {
+    return productsCollection.updateOne({ _id: new ObjectID(id) }, { $set: updates });
+  }
+}
+
+module.exports = Products;

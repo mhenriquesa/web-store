@@ -9,77 +9,66 @@ exports.addProductScreen = (req, res, next) => {
 
 exports.editProductScreen = (req, res, next) => {
   const editMode = req.query.edit;
-
   if (!editMode) return res.redirect('/');
 
-  Products.findByPk(req.params.productId)
+  Products.findById(req.params.productId)
     .then(product => {
       if (!product) return res.redirect('/');
 
       res.render('admin/edit-product', {
         pageTitle: 'Gypsy Store - Products edition',
         path: '/admin/edit-product',
-        product: product,
+        product: product[0],
         editing: editMode,
-      });
-    })
-    .catch(err => {});
-};
-
-exports.deleteProduct = (req, res, next) => {
-  Products.findByPk(req.body.productId)
-    .then(product => {
-      return product.destroy();
-    })
-    .then(result => {
-      console.log(`Product destroyed!`);
-      res.redirect('/admin/products');
-    })
-    .catch(err => {});
-};
-
-exports.allProducts = (req, res, next) => {
-  Products.findAll()
-    .then(result => {
-      res.render('admin/products', {
-        pageTitle: 'Gypsy Store - Admin products',
-        pageSubTitle: "Manage stores's products",
-        products: result,
-        path: '/admin/products',
       });
     })
     .catch(err => console.log(err));
 };
 
-exports.addProduct = (req, res, next) => {
-  Products.create({
-    title: req.body.title,
-    price: req.body.price,
-    image: req.body.imageUrl,
-    description: req.body.description,
-  })
+exports.deleteProduct = (req, res, next) => {
+  Products.deleteById(req.body.productId)
     .then(result => {
       res.redirect(`/admin/products`);
-      console.log('Created Product');
+    })
+    .catch(err => console.log(err));
+};
+
+exports.allProducts = (req, res, next) => {
+  Products.listAll()
+    .then(products => {
+      res.render('admin/products', {
+        pageTitle: 'Gypsy Store - Admin products',
+        pageSubTitle: "Manage stores's products",
+        products: products,
+        path: '/admin/products',
+      });
     })
     .catch(err => {
       console.log(err);
     });
 };
 
-exports.editProduct = (req, res, next) => {
-  Products.findByPk(req.body.productId)
-    .then(product => {
-      product.title = req.body.title;
-      product.price = req.body.price;
-      product.description = req.body.description;
-      product.image = req.body.imageUrl;
+exports.addProduct = async (req, res, next) => {
+  const product = new Products({
+    title: req.body.title,
+    price: req.body.price,
+    image: req.body.imageUrl,
+    description: req.body.description,
+  });
 
-      return product.save();
-    })
-    .then(product => {
-      console.log(product);
-      res.redirect('/');
+  await product.create();
+  res.redirect(`/`);
+};
+
+exports.editProduct = (req, res, next) => {
+  Products.updateById(req.body.productId, {
+    title: req.body.title,
+    price: req.body.price,
+    description: req.body.description,
+    image: req.body.imageUrl,
+  })
+    .then(result => {
+      res.redirect(`/admin/products`);
     })
     .catch(err => console.log(err));
 };
