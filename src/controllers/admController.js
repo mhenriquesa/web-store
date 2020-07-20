@@ -48,27 +48,17 @@ exports.allProducts = (req, res, next) => {
     });
 };
 
-exports.addProduct = async (req, res, next) => {
-  const product = new Products({
-    title: req.body.title,
-    price: req.body.price,
-    image: req.body.imageUrl,
-    description: req.body.description,
-  });
+exports.addProduct = (req, res, next) => {
+  const product = new Products(req.body);
 
-  await product.create();
-  res.redirect(`/`);
+  product
+    .create()
+    .then(() => res.redirect(`/`))
+    .catch(err => console.log(err));
 };
 
 exports.editProduct = (req, res, next) => {
-  Products.updateById(req.body.productId, {
-    title: req.body.title,
-    price: req.body.price,
-    description: req.body.description,
-    image: req.body.imageUrl,
-  })
-    .then(result => {
-      res.redirect(`/admin/products`);
-    })
+  Products.updateById(req.body)
+    .then(() => res.redirect(`/admin/products`))
     .catch(err => console.log(err));
 };

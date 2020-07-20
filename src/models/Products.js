@@ -2,12 +2,15 @@ const { ObjectID } = require('mongodb');
 const productsCollection = require('../db').db().collection('products');
 
 class Products {
-  constructor(data) {
-    this.data = data;
+  constructor({ title, price, imageUrl, description }) {
+    this.title = title;
+    this.price = price;
+    this.image = imageUrl;
+    this.description = description;
   }
 
   create() {
-    return productsCollection.insertOne(this.data);
+    return productsCollection.insertOne(this);
   }
 
   static listAll() {
@@ -22,8 +25,11 @@ class Products {
     return productsCollection.deleteOne({ _id: new ObjectID(id) });
   }
 
-  static updateById(id, updates) {
-    return productsCollection.updateOne({ _id: new ObjectID(id) }, { $set: updates });
+  static updateById({ productId, title, price, imageUrl, description }) {
+    return productsCollection.updateOne(
+      { _id: new ObjectID(productId) },
+      { $set: { title, price, description, imageUrl } }
+    );
   }
 }
 
