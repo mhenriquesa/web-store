@@ -9,6 +9,7 @@ router.get('/products/:productId', shopController.productScreen);
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
+router.post('/logout', userController.logout);
 
 router.get('/cart', shopController.getCart);
 router.get('/orders', shopController.getOrders);
