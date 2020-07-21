@@ -15,7 +15,16 @@ exports.login = (req, res) => {
   new User(req.body)
     .login()
     .then(user => {
-      res.redirect('/');
+      if (!user) return res.redirect('/');
+
+      req.session.user = {
+        username: user.username,
+        id: user._id,
+      };
+      req.session.save(res.redirect('/'));
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      res.redirect('/');
+    });
 };

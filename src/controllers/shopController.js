@@ -3,15 +3,22 @@ const User = require('../models/Users');
 const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
-  Products.listAll()
-    .then(result => {
-      res.render('index', {
-        pageTitle: 'Gypsy Store',
-        products: result,
-        path: '/',
-      });
-    })
-    .catch(err => console.log(err));
+  if (req.session.user) {
+    Products.listAll()
+      .then(result => {
+        res.render('index', {
+          pageTitle: 'Gypsy Store',
+          products: result,
+          path: '/',
+          username: req.session.user.username,
+        });
+      })
+      .catch(err => console.log(err));
+  } else
+    res.render('home-guest', {
+      pageTitle: 'Gypsy store - welcome',
+      path: '/',
+    });
 };
 
 exports.productScreen = (req, res, next) => {

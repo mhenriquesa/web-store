@@ -17,7 +17,7 @@ class User {
   create() {
     const salt = bcryptjs.genSaltSync(10);
 
-    this.password = bcryptjs.hashSync(password, salt);
+    this.password = bcryptjs.hashSync(this.password, salt);
     return usersCollection.insertOne(this);
   }
 
@@ -26,7 +26,7 @@ class User {
       .findOne({ username: this.username })
       .then(result => {
         if (result && bcryptjs.compareSync(this.password, result.password)) return result;
-        return console.log('user or pass invalid');
+        return;
       })
       .catch(err => {
         console.log(err);
