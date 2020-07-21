@@ -1,4 +1,5 @@
 const Products = require('../models/Products');
+const User = require('../models/Users');
 const Cart = require('../models/Cart');
 
 exports.home = (req, res, next) => {
@@ -49,9 +50,13 @@ exports.getCart = async (req, res, next) => {
   });
 };
 
-exports.addToCart = (req, res, next) => {
-  Cart.addToCart(req.body.productId);
-  res.redirect('/cart');
+exports.addToCart = async (req, res, next) => {
+  req.userDoc
+    .addToCart(req.body.productId)
+    .then(result => {
+      res.redirect('/');
+    })
+    .catch(err => err);
 };
 
 exports.deleteFromCart = (req, res, next) => {

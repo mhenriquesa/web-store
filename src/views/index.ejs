@@ -4,6 +4,73 @@
   <body>
     <%- include('includes/header.ejs') %>
     <main>
+      <h2>Register</h2>
+        <form id="register-form" action="/register" method="post">
+
+          <label for="username-register">Username</label>        
+          <input
+          name="username"
+          id="username-register"
+          class="form-control"
+          type="text"
+          placeholder="Pick a username"
+          autocomplete="off"
+          />
+
+          <label for="email-register"><small>Email</small></label>
+          <input
+          name="email"
+          id="email-register"
+          class="form-control"
+          type="text"
+          placeholder="you@example.com"
+          autocomplete="off"
+          />
+          <label for="password-register" class="text-muted mb-1"
+            ><small>Password</small></label
+          >
+          <input
+            name="password"
+            id="password-register"
+            class="form-control"
+            type="password"
+            placeholder="Create a password"
+          />
+        </div>
+
+          <button type="submit" >
+          Sign up for ShopApp
+          </button>
+
+
+          <h2>Login</h2>
+        </form>
+        <form action="/login" method="POST" class="mb-0 pt-2 pt-md-0">
+          <div class="row align-items-center">
+            <div class="col-md mr-0 pr-md-0 mb-3 mb-md-0">
+              <input
+                name="username"
+                class="form-control form-control-sm input-dark"
+                type="text"
+                placeholder="Username"
+                autocomplete="off"
+              />
+            </div>
+            <div class="col-md mr-0 pr-md-0 mb-3 mb-md-0">
+              <input
+                name="password"
+                class="form-control form-control-sm input-dark"
+                type="password"
+                placeholder="Password"
+              />
+            </div>
+            <div class="col-md-auto">
+    
+              <button class="btn btn-primary btn-sm">Sign In</button>
+            </div>
+          </div>
+        </form>
+        
       <h1>My Products</h1>
       <p>List of all the products...</p>
 
