@@ -3,12 +3,11 @@ const { ObjectID } = require('mongodb');
 const bcryptjs = require('bcryptjs');
 
 class User {
-  constructor({ username, email, password }) {
+  constructor({ username, email, password, id }) {
     this.username = username;
-    this.email = email;
-    this.password = password;
-    this.cart = [];
-    this.orders = [];
+    password ? (this.password = password) : '';
+    id ? (this.id = id) : '';
+    email ? (this.email = email) : '';
   }
 
   create() {
@@ -37,7 +36,7 @@ class User {
   }
 
   addToCart(productId) {
-    this.cart.concat([{ [productId]: 1 }]);
+    console.log(this);
   }
 
   static findById(id) {

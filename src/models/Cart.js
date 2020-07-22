@@ -1,5 +1,6 @@
 const Products = require('./Products');
 const User = require('./Users');
+const { ObjectID } = require('mongodb');
 const cartsCollection = require('../db').db().collection('carts');
 
 class Cart {
@@ -10,11 +11,40 @@ class Cart {
   }
 
   static create(buyerId) {
-    const cart = new Cart(buyerId);
+    const cart = new Cart(new ObjectID(buyerId));
     return cartsCollection.insertOne(cart);
   }
 
-  addProduct() {}
+  static addProduct(buyerId, productId) {
+    Cart.getCurrentCart(buyerId)
+      .then(cart => {
+        const productExistsInCart = cart.products.find(element => {
+          return element[productId];
+        });
+
+        const increaseQty = () => {
+          return cart.products.map(element => {
+            if (element[productId])
+              return Object.assign({}, element, {
+                [productId]: element[productId] + 1,
+              });
+            return element;
+          });
+        };
+
+        const appendProduct = () => {
+          return cart.products.concat([{ [productId]: 1 }]);
+        };
+
+        const updatedProducts = productExistsInCart ? increaseQty() : appendProduct();
+
+        cartsCollection.updateOne(
+          { _id: new ObjectID(cart._id) },
+          { $set: { products: updatedProducts } }
+        );
+      })
+      .catch(err => console.log(err));
+  }
 
   removeProduct() {}
 
@@ -22,7 +52,28 @@ class Cart {
 
   emptyCart() {}
 
-  currentCart() {}
+  static getCurrentCart(buyerId) {
+    return new Promise((resolve, reject) => {
+      cartsCollection
+        .findOne({ buyer: new ObjectID(buyerId) })
+        .then(result => {
+          if (!result) {
+            Cart.create(buyerId)
+              .then(result => {
+                console.log('We created a cart');
+                resolve(result.ops[0]);
+              })
+              .catch(err => reject(err));
+          } else {
+            console.log('We found the cart');
+            resolve(result);
+          }
+        })
+        .catch(err => {
+          reject('Please, try in a couple minutes');
+        });
+    });
+  }
   // static currentCart() {
   //   return new Promise((resolve, reject) => {
   //     fs.readFile(cartDataPath, (err, fileContent) => {

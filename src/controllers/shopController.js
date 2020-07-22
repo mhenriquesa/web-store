@@ -46,20 +46,23 @@ exports.getProducts = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getCart = (req, res, next) => {
-  // let cart = await Cart.currentCart();
-
-  res.render('cart', {
-    pageTitle: 'Gypsy Store - Your cart',
-    pageSubTitle: 'Manage your cart',
-    path: '/cart',
-    products: cart.products,
-  });
+exports.cartScreen = (req, res, next) => {
+  Cart.getCurrentCart(req.session.user.id)
+    .then(cart => {
+      res.render('cart', {
+        pageTitle: 'Gypsy Store - Your cart',
+        pageSubTitle: 'Manage your cart',
+        path: '/cart',
+        products: cart.products,
+      });
+    })
+    .catch(err => {});
 };
 
 exports.addToCart = (req, res, next) => {
-  req.currentUser.addToCart(req.body.productId);
-  res.redirect('/');
+  Cart.addProduct(req.session.user.id, req.body.productId);
+
+  res.redirect('/cart');
 };
 
 exports.deleteFromCart = (req, res, next) => {

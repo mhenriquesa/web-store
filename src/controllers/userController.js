@@ -45,10 +45,6 @@ exports.logout = (req, res) => {
 };
 
 exports.userMustBeLoggedIn = (req, res, next) => {
-  if (req.session.user) {
-    req.currentUser = new User(req.session.user);
-    next();
-    return;
-  }
+  if (req.session.user) return next();
   req.session.save(() => res.redirect('/'));
 };

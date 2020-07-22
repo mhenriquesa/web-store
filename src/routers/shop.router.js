@@ -11,7 +11,7 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 
-router.get('/cart', shopController.getCart);
+router.get('/cart', shopController.cartScreen);
 router.get('/orders', shopController.getOrders);
 router.get('/checkout', shopController.getCheckout);
 
