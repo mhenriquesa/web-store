@@ -29,8 +29,8 @@ exports.login = (req, res) => {
 
   user
     .login()
-    .then(() => {
-      createSession(req.session, user);
+    .then(attemptedUser => {
+      createSession(req.session, attemptedUser);
       res.redirect('/');
     })
     .catch(err => {

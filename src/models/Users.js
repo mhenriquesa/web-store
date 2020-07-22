@@ -21,15 +21,13 @@ class User {
   login() {
     return new Promise((resolve, reject) => {
       usersCollection
-        .findOne({ username: this.data.username })
+        .findOne({ username: this.username })
         .then(attemptedUsername => {
           if (
             attemptedUsername &&
-            bcryptjs.compareSync(this.data.password, attemptedUsername.password)
+            bcryptjs.compareSync(this.password, attemptedUsername.password)
           ) {
-            this.data = attemptedUsername;
-            console.log(this.data);
-            resolve('Welcome');
+            resolve(attemptedUsername);
           } else reject('User or pass invalid');
         })
         .catch(() => {
