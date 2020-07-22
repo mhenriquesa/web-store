@@ -6,6 +6,7 @@ const adminRouter = require('./routers/admin.router');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const User = require('./models/Users');
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 

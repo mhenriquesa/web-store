@@ -46,8 +46,8 @@ exports.getProducts = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getCart = async (req, res, next) => {
-  let cart = await Cart.currentCart();
+exports.getCart = (req, res, next) => {
+  // let cart = await Cart.currentCart();
 
   res.render('cart', {
     pageTitle: 'Gypsy Store - Your cart',
@@ -57,13 +57,9 @@ exports.getCart = async (req, res, next) => {
   });
 };
 
-exports.addToCart = async (req, res, next) => {
-  req.userDoc
-    .addToCart(req.body.productId)
-    .then(result => {
-      res.redirect('/');
-    })
-    .catch(err => err);
+exports.addToCart = (req, res, next) => {
+  req.currentUser.addToCart(req.body.productId);
+  res.redirect('/');
 };
 
 exports.deleteFromCart = (req, res, next) => {

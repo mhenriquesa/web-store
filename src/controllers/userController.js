@@ -1,9 +1,22 @@
 const User = require('../models/Users');
+const Cart = require('../models/Cart');
+
+const createSession = (session, { username, _id, email }) => {
+  session.user = {
+    username: username,
+    id: _id,
+    email: email,
+  };
+  session.save();
+};
 
 exports.register = (req, res) => {
-  new User(req.body)
+  const user = new User(req.body);
+
+  user
     .create()
-    .then(() => {
+    .then(info => {
+      createSession(req.session, info.ops[0]);
       res.redirect('/');
     })
     .catch(err => {
@@ -12,18 +25,16 @@ exports.register = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  new User(req.body)
-    .login()
-    .then(user => {
-      if (!user) return res.redirect('/');
+  const user = new User(req.body);
 
-      req.session.user = {
-        username: user.username,
-        id: user._id,
-      };
-      req.session.save(res.redirect('/'));
+  user
+    .login()
+    .then(() => {
+      createSession(req.session, user);
+      res.redirect('/');
     })
     .catch(err => {
+      console.log('Hello from user login catch');
       console.log(err);
       res.redirect('/');
     });
@@ -31,4 +42,13 @@ exports.login = (req, res) => {
 
 exports.logout = (req, res) => {
   req.session.destroy(() => res.redirect('/'));
+};
+
+exports.userMustBeLoggedIn = (req, res, next) => {
+  if (req.session.user) {
+    req.currentUser = new User(req.session.user);
+    next();
+    return;
+  }
+  req.session.save(() => res.redirect('/'));
 };

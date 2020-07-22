@@ -3,15 +3,12 @@ const { ObjectID } = require('mongodb');
 const bcryptjs = require('bcryptjs');
 
 class User {
-  constructor({ username, password, email }) {
+  constructor({ username, email, password }) {
     this.username = username;
+    this.email = email;
     this.password = password;
-    if (email) this.email = email;
-
-    this.cart = {
-      products: [],
-      total: 0,
-    };
+    this.cart = [];
+    this.orders = [];
   }
 
   create() {
@@ -22,51 +19,27 @@ class User {
   }
 
   login() {
-    return usersCollection
-      .findOne({ username: this.username })
-      .then(result => {
-        if (result && bcryptjs.compareSync(this.password, result.password)) return result;
-        return;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      usersCollection
+        .findOne({ username: this.data.username })
+        .then(attemptedUsername => {
+          if (
+            attemptedUsername &&
+            bcryptjs.compareSync(this.data.password, attemptedUsername.password)
+          ) {
+            this.data = attemptedUsername;
+            console.log(this.data);
+            resolve('Welcome');
+          } else reject('User or pass invalid');
+        })
+        .catch(() => {
+          reject('Please, try again in some minutes');
+        });
+    });
   }
 
   addToCart(productId) {
-    // const updatedCart = {
-    //   items: this.cart.products.concat([{ productId: new ObjectID(productId), qty: 1 }]),
-    // };
-
-    const updatedCart = Object.assign({}, this.cart, {
-      products: this.cart.products.concat([{ id: productId, qty: 1 }]),
-    });
-
-    return usersCollection
-      .updateOne({ _id: new ObjectID(this.id) }, { $set: updatedCart })
-      .then(result => {
-        console.log('Updated');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    // Products.findById(productId)
-    //   .then(result => {
-    //     usersCollection.updateOne(
-    //       { _id: new ObjectID(this.id) },
-    //       {
-    //         $set: {
-    //           cart: Object.assign(
-    //             {},
-    //             this.cart,
-    //             (cart.products = this.cart.products.concat([result.name]))
-    //           ),
-    //         },
-    //       }
-    //     );
-    //   })
-    //   .catch(err => console.log(err));
+    this.cart.concat([{ [productId]: 1 }]);
   }
 
   static findById(id) {

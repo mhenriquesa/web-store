@@ -15,7 +15,8 @@ router.get('/cart', shopController.getCart);
 router.get('/orders', shopController.getOrders);
 router.get('/checkout', shopController.getCheckout);
 
-router.post('/cart', shopController.addToCart);
+router.post('/cart', userController.userMustBeLoggedIn, shopController.addToCart);
+
 router.post('/cart-delete-item', shopController.deleteFromCart);
 
 router.get('*', shopController.pageNotFound);
