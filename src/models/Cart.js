@@ -44,7 +44,18 @@ class Cart {
       .catch(err => console.log(err));
   }
 
-  static removeProduct() {}
+  static removeProduct(buyerId, productId) {
+    Cart.getCurrentCart(buyerId)
+      .then(cart => {
+        const updatedProducts = cart.products.filter(element => element.id != productId);
+
+        cartsCollection.updateOne(
+          { _id: new ObjectID(cart._id) },
+          { $set: { products: updatedProducts } }
+        );
+      })
+      .catch(err => console.log(err));
+  }
 
   static renderInfo(cart) {
     const productsInfo = cart.products.map(element => {

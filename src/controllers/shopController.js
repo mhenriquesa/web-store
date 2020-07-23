@@ -72,7 +72,7 @@ exports.addToCart = (req, res, next) => {
 };
 
 exports.deleteFromCart = (req, res, next) => {
-  Cart.removeProduct(req.body.productId);
+  Cart.removeProduct(req.session.user.id, req.body.productId);
   res.redirect('/cart');
 };
 
