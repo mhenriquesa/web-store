@@ -18,7 +18,14 @@ class Products {
   }
 
   static findById(id) {
-    return productsCollection.find({ _id: new ObjectID(id) }).toArray();
+    return new Promise((resolve, reject) => {
+      productsCollection
+        .findOne({ _id: new ObjectID(id) })
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject('Product not found'));
+    });
   }
 
   static deleteById(id) {

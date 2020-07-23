@@ -49,12 +49,18 @@ exports.getProducts = (req, res, next) => {
 exports.cartScreen = (req, res, next) => {
   Cart.getCurrentCart(req.session.user.id)
     .then(cart => {
-      res.render('cart', {
-        pageTitle: 'Gypsy Store - Your cart',
-        pageSubTitle: 'Manage your cart',
-        path: '/cart',
-        products: cart.products,
-      });
+      Cart.renderInfo(cart)
+        .then(result => {
+          console.log(result);
+          res.render('cart', {
+            pageTitle: 'Gypsy Store - Your cart',
+            pageSubTitle: 'Manage your cart',
+            path: '/cart',
+            products: result.products,
+            value: result.value,
+          });
+        })
+        .catch(err => {});
     })
     .catch(err => {});
 };
@@ -62,11 +68,11 @@ exports.cartScreen = (req, res, next) => {
 exports.addToCart = (req, res, next) => {
   Cart.addProduct(req.session.user.id, req.body.productId);
 
-  res.redirect('/cart');
+  res.redirect('/');
 };
 
 exports.deleteFromCart = (req, res, next) => {
-  Cart.deleteItem(req.body.productId);
+  Cart.removeProduct(req.body.productId);
   res.redirect('/cart');
 };
 

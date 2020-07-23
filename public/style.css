@@ -258,5 +258,9 @@ form {
   text-align: center;
 }
 
+.product__image {
+  height: 5rem;
+}
+
 
 

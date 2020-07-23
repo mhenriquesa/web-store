@@ -7,7 +7,6 @@ class Cart {
   constructor(buyerId) {
     this.buyer = buyerId;
     this.products = [];
-    this.value = 0;
   }
 
   static create(buyerId) {
@@ -18,23 +17,22 @@ class Cart {
   static addProduct(buyerId, productId) {
     Cart.getCurrentCart(buyerId)
       .then(cart => {
-        const productExistsInCart = cart.products.find(element => {
-          return element[productId];
-        });
-
         const increaseQty = () => {
           return cart.products.map(element => {
-            if (element[productId])
+            if (element.id == productId)
               return Object.assign({}, element, {
-                [productId]: element[productId] + 1,
+                qty: element.qty + 1,
               });
             return element;
           });
         };
-
         const appendProduct = () => {
-          return cart.products.concat([{ [productId]: 1 }]);
+          return cart.products.concat([{ id: new ObjectID(productId), qty: 1 }]);
         };
+
+        const productExistsInCart = cart.products.find(element => {
+          return element.id == productId;
+        });
 
         const updatedProducts = productExistsInCart ? increaseQty() : appendProduct();
 
@@ -46,7 +44,23 @@ class Cart {
       .catch(err => console.log(err));
   }
 
-  removeProduct() {}
+  static removeProduct() {}
+
+  static renderInfo(cart) {
+    const productsInfo = cart.products.map(element => {
+      return Products.findById(element.id).then(result => {
+        return Object.assign({}, result, { qty: element.qty });
+      });
+    });
+
+    return Promise.all(productsInfo).then(result => {
+      const totalValue = result.reduce((acc, current) => {
+        return acc + current.qty * current.price;
+      }, 0);
+
+      return { products: result, value: totalValue };
+    });
+  }
 
   updateProduct() {}
 
